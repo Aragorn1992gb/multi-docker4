@@ -68,9 +68,9 @@ services:
             - ./worker:/app
     # nginx service specification
     nginx:
-        depends_on:
-            - api
-            - client
+        # depends_on:
+        #     - api
+        #     - client
 
         restart: always
         # build specifications
