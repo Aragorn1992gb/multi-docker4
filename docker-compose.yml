@@ -8,6 +8,24 @@ services:
     redis:
         # load redis image found in hub.docker.com
         image: 'redis:latest'
+        # nginx service specification
+    nginx:
+        depends_on:
+            - api
+            - client
+
+        restart: always
+        # build specifications
+        build:
+            # build using Dockerfile.dev
+            dockerfile: Dockerfile.dev
+            # search file to build in worker folder
+            context: ./nginx
+        # ports specifications
+        ports:
+            # map port 3050 of my local machine to port 80 of the container
+            - '3050:80'
+        # in order to fix the failed connection of Nginx to upstream
     # server service specification (call it 'api' to avoid keyword mistakes for nginx)
     api:
         depends_on:
@@ -66,21 +84,3 @@ services:
             - /app/node_modules
             # copy and overwrite everything in worker to app in container (don't touch node_modules)
             - ./worker:/app
-    # nginx service specification
-    nginx:
-        # depends_on:
-        #     - api
-        #     - client
-
-        restart: always
-        # build specifications
-        build:
-            # build using Dockerfile.dev
-            dockerfile: Dockerfile.dev
-            # search file to build in worker folder
-            context: ./nginx
-        # ports specifications
-        ports:
-            # map port 3050 of my local machine to port 80 of the container
-            - '3050:80'
-        # in order to fix the failed connection of Nginx to upstream
