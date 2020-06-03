@@ -1,0 +1,86 @@
+version: '3'
+services:
+    postgres:
+        # load postgres image found in hub.docker.com
+        image: 'postgres:latest'
+        environment:
+            - POSTGRES_PASSWORD=postgres_password
+    redis:
+        # load redis image found in hub.docker.com
+        image: 'redis:latest'
+    # server service specification (call it 'api' to avoid keyword mistakes for nginx)
+    api:
+        depends_on:
+            - postgres
+        # build specifications
+        build:
+            # build using Dockerfile.dev
+            dockerfile: Dockerfile.dev
+            # search file to build in server folder
+            context: ./server
+        # volumes specifications
+        volumes:
+            # don't touch node_modules folder (in order to don't reinstall it anytime)
+            - /app/node_modules
+            # copy and overwrite everything in server to app in container (don't touch node_modules)
+            - ./server:/app
+        # environment variables for redis and postgres specification
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - PGUSER=postgres
+            - PGHOST=postgres
+            - PGDATABASE=postgres
+            - PGPASSWORD=postgres_password
+            - PGPORT=5432
+    #client service specification
+    client:
+        # build specifications
+        build:
+            # build using Dockerfile.dev
+            dockerfile: Dockerfile.dev
+            # search file to build in client folder
+            context: ./client
+        # volumes specifications
+        volumes:
+            # don't touch node_modules folder (in order to don't reinstall it anytime)
+            - /app/node_modules
+            # copy and overwrite everything in client to app in container (don't touch node_modules)
+            - ./client:/app
+        # to fix a bug of React using docker-compose
+        stdin_open: true
+    # worker service specification
+    worker:
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        # build specifications
+        build:
+            # build using Dockerfile.dev
+            dockerfile: Dockerfile.dev
+            # search file to build in worker folder
+            context: ./worker
+        # volumes specifications
+        volumes:
+            # don't touch node_modules folder (in order to don't reinstall it anytime)
+            - /app/node_modules
+            # copy and overwrite everything in worker to app in container (don't touch node_modules)
+            - ./worker:/app
+    # nginx service specification
+    nginx:
+        depends_on:
+            - api
+            - client
+
+        restart: always
+        # build specifications
+        build:
+            # build using Dockerfile.dev
+            dockerfile: Dockerfile.dev
+            # search file to build in worker folder
+            context: ./nginx
+        # ports specifications
+        ports:
+            # map port 3050 of my local machine to port 80 of the container
+            - '3050:80'
+        # in order to fix the failed connection of Nginx to upstream
