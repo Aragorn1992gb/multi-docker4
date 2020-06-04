@@ -2,7 +2,7 @@ language: generic
 sudo: required
 
 services:
-    - docker
+  - docker
 
 # build test version of client project and evenutally run test inside it
 before_install:
