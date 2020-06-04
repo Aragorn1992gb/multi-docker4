@@ -13,7 +13,7 @@ WORKDIR "/app"
 COPY ./package*.json ./
 # COPY package.json ./
 RUN npm install
-COPY . .
+COPY ./ ./
 
 # "build" perchè dobbiamo avviare quello di prod. CI sarà una cartella "build" nella working directory "app" in cui vi saranno tutti i file di produzione
 RUN npm run build
@@ -29,6 +29,6 @@ EXPOSE 3000
 #COPY --from=builder /app/build /usr/share/nginx/html
 
 # Visto che sto usando un builder senza nome, metto =0. Copiamo tutti i production assets di base della prima fase (senza nome, quindi mettiamo , altrimenti sarebbe "builder" o altro nome della fase). Notiamo questo percorso anche in ./nginx/default.conf
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf 
+COPY ./nginx/default*.conf /etc/nginx/conf.d/default.conf 
 COPY --from=0 /app/build /usr/share/nginx/html
 #COPY --from=builder /app/build /usr/share/nginx/html
