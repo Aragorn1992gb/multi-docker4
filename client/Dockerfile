@@ -4,8 +4,8 @@
 # FROM node:alpine as builder
 
 # Usa un builder senza nome se deploy su AWS elastic-beanstalk
-FROM node:alpine
-# FROM node:alpine as builder
+# FROM node:alpine
+FROM node:alpine as builder
 
 WORKDIR '/app'
 
@@ -30,5 +30,5 @@ EXPOSE 3000
 
 # Visto che sto usando un builder senza nome, metto =0. Copiamo tutti i production assets di base della prima fase (senza nome, quindi mettiamo , altrimenti sarebbe "builder" o altro nome della fase). Notiamo questo percorso anche in ./nginx/default.conf
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf 
-COPY --from=0 /app/build /usr/share/nginx/html
-#COPY --from=builder /app/build /usr/share/nginx/html
+# COPY --from=0 /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
