@@ -55,7 +55,7 @@ app.get('/values/current', async (req, res) => {
 });
 
 app.post('/values', async (req, res) => {
-  console.log("/values");
+  console.log("/values prova");
   const index = req.body.index;
   console.log("/values after index");
   if (parseInt(index) > 40) {
