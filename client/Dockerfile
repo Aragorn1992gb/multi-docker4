@@ -7,7 +7,7 @@
 FROM node:alpine
 # FROM node:alpine as builder
 
-WORKDIR '/app'
+WORKDIR "/app"
 
 # Metti l'asterisco dopo package se deploy sy AWS elastic-beanstalk
 COPY ./package*.json ./
