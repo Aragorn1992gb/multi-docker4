@@ -4,7 +4,7 @@
 # FROM node:alpine as builder
 
 # Usa un builder senza nome se deploy su AWS elastic-beanstalk
-FROM node:latest
+FROM node:alpine
 # FROM node:alpine as builder
 
 WORKDIR "/app"
