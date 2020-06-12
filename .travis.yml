@@ -8,14 +8,17 @@ services:
 before_install:
     # build dev image for tests. Only develop Dockerfile can do the tests. We have to specify it because of we have a different one for each project
     # we will overwrite the default Dockerfile.  Build context is on the client dir (./client)
-    - docker build -t aragorn1992gb/react-test -f ./client/Dockerfile.dev ./client
+   # - docker build -t aragorn1992gb/react-test -f ./client/Dockerfile.dev ./client
+    - docker build -t aragorn1992/react-test -f ./client/Dockerfile.dev ./client
+
     # - docker build otherProj... if we have other tests
 
 script:
     # run test build previously. Use "-- --coverage" in order to stop test (otherwhise it will be in listening for ever)
     # - docker run aragorn1992gb/react-test npm test -- --coverage
     # but due to allow to test Jest library to work, using
-    - docker run -e CI=true aragorn1992gb/react-test npm test
+    #- docker run -e CI=true aragorn1992gb/react-test npm test
+    - docker run -e CI=true aragorn1992/react-test npm test
     # docker run otherProj runTheOtherTests... if  we have other tests
 
 after_success:
